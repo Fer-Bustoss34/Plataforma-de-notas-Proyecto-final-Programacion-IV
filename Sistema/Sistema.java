@@ -4,7 +4,6 @@ import Administrador.Administrador;
 import Docente.Docente;
 import Estudiante.Estudiante;
 import Materia.actividad;
-import Materia.calificacion;
 import Materia.materia;
 import User.user;
 import java.util.ArrayList;
@@ -45,28 +44,35 @@ public class Sistema {
 
     // ── Gestión de usuarios ──────────────────────────────────────────────────
 
-    public String registrarAdministrador(String cedula, String nombre, String apellido,
-                                          String correo, String contrasena) {
-        if (correoExiste(correo))   return "El correo ya está registrado";
-        if (cedulaExiste(cedula))   return "La cédula ya está registrada";
-        administradores.add(new Administrador(cedula, nombre, apellido, correo, contrasena));
-        return "Administrador registrado exitosamente";
-    }
+    public String registrarDocente(Administrador admin, String cedula, String nombre,
+                                    String apellido, String correo,
+                                    String contrasena, String especialidad) {
+        if (correoExiste(correo)) return "El correo ya está registrado";
+        if (cedulaExiste(cedula)) return "La cédula ya está registrada";
 
-    public String registrarDocente(String cedula, String nombre, String apellido,
-                                    String correo, String contrasena, String especialidad) {
-        if (correoExiste(correo))   return "El correo ya está registrado";
-        if (cedulaExiste(cedula))   return "La cédula ya está registrada";
-        docentes.add(new Docente(cedula, nombre, apellido, correo, contrasena, especialidad));
+        Docente nuevo = admin.crear_docente(cedula, nombre, apellido, correo, contrasena, cedula, especialidad);
+        docentes.add(nuevo);
         return "Docente registrado exitosamente";
     }
 
-    public String registrarEstudiante(String cedula, String nombre, String apellido,
-                                       String correo, String contrasena, int semestre) {
-        if (correoExiste(correo))   return "El correo ya está registrado";
-        if (cedulaExiste(cedula))   return "La cédula ya está registrada";
-        estudiantes.add(new Estudiante(cedula, nombre, apellido, correo, contrasena, semestre));
+    public String registrarEstudiante(Administrador admin, String cedula, String nombre,
+                                       String apellido, String correo,
+                                       String contrasena, int semestre) {
+        if (correoExiste(correo)) return "El correo ya está registrado";
+        if (cedulaExiste(cedula)) return "La cédula ya está registrada";
+
+        Estudiante nuevo = admin.crear_estudiante(cedula, nombre, apellido, correo, contrasena, cedula, semestre);
+        estudiantes.add(nuevo);
         return "Estudiante registrado exitosamente";
+    }
+
+    public String registrarAdministrador(String cedula, String nombre, String apellido,
+                                          String correo, String contrasena) {
+        if (correoExiste(correo)) return "El correo ya está registrado";
+        if (cedulaExiste(cedula)) return "La cédula ya está registrada";
+
+        administradores.add(new Administrador(cedula, nombre, apellido, correo, contrasena));
+        return "Administrador registrado exitosamente";
     }
 
     public String eliminarEstudiante(String cedula) {
@@ -81,11 +87,11 @@ public class Sistema {
 
     // ── Gestión de materias ──────────────────────────────────────────────────
 
-    public String registrarMateria(String codigo, int creditos, String nombre, Docente docente) {
-        if (buscarMateria(codigo) != null)
-            return "Ya existe una materia con ese código";
+    public String registrarMateria(Administrador admin, String codigo, int creditos,
+                                    String nombre, Docente docente) {
+        if (buscarMateria(codigo) != null) return "Ya existe una materia con ese código";
 
-        materia nueva = new materia(codigo, creditos, nombre, docente);
+        materia nueva = admin.crear_materia(codigo, creditos, nombre, docente);
         materias.add(nueva);
         docente.getMaterias().add(nueva);
         return "Materia registrada exitosamente";
@@ -94,9 +100,21 @@ public class Sistema {
     public String eliminarMateria(String codigo) {
         materia objetivo = buscarMateria(codigo);
         if (objetivo == null) return "Materia no encontrada";
+
         objetivo.getDocente().getMaterias().remove(objetivo);
         materias.remove(objetivo);
         return "Materia eliminada exitosamente";
+    }
+
+    // ── Asignar docente a materia ────────────────────────────────────────────
+
+    public String asignarDocente(Administrador admin, materia m, Docente docente) {
+        if (!materias.contains(m))       return "Materia no registrada en el sistema";
+        if (!docentes.contains(docente)) return "Docente no registrado en el sistema";
+
+        ArrayList<Docente> lista = new ArrayList<>();
+        lista.add(docente);
+        return admin.asignar_docente(0, lista, m);
     }
 
     // ── Matricular estudiante ────────────────────────────────────────────────
@@ -104,34 +122,37 @@ public class Sistema {
     public String matricularEstudiante(Estudiante e, materia m) {
         if (!estudiantes.contains(e)) return "Estudiante no registrado en el sistema";
         if (!materias.contains(m))    return "Materia no registrada en el sistema";
+
         return e.matricular(m);
     }
 
     // ── Calificaciones ───────────────────────────────────────────────────────
 
-    public String registrarCalificacion(materia m, Estudiante e, actividad a, double valor) {
-        if (!materias.contains(m))        return "Materia no registrada en el sistema";
+    public String registrarCalificacion(Docente doc, materia m,
+                                         Estudiante e, actividad a, double valor) {
+        if (!materias.contains(m))           return "Materia no registrada en el sistema";
         if (!m.getEstudiantes().contains(e)) return "El estudiante no está matriculado en esta materia";
 
-        // Si ya existe la calificación, la actualiza
-        for (calificacion c : m.getCalificaciones()) {
-            if (c.getEstudiante().getCedula().equals(e.getCedula()) &&
-                c.getActividad().getNombre().equals(a.getNombre())) {
-                c.setValor(valor);
-                return "Calificación actualizada exitosamente";
-            }
-        }
+        return doc.calificar_estudiante(m, e, a, valor);
+    }
 
-        // Si no existe, delega al docente de la materia
-        return m.getDocente().calificar_estudiante(m, e, a, valor);
+    public String crearActividad(Docente doc, String titulo, double porciento, materia m) {
+        if (!materias.contains(m)) return "Materia no registrada en el sistema";
+
+        return doc.crear_actividad(titulo, porciento, m);
     }
 
     public double calcularNotaFinal(materia m, Estudiante e) {
         double total = 0.0;
-        for (calificacion c : m.getCalificaciones())
+        for (var c : m.getCalificaciones())
             if (c.getEstudiante().getCedula().equals(e.getCedula()))
                 total += c.getValor() * (c.getActividad().getPorcentaje() / 100.0);
         return Math.round(total * 100.0) / 100.0;
+    }
+
+    public double promedio_materia(Estudiante e, materia m) {
+        if (!materias.contains(m)) return -1;
+        return e.promedio_materia(m);
     }
 
     // ── Búsquedas ────────────────────────────────────────────────────────────
