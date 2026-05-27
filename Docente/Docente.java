@@ -30,12 +30,10 @@ public class Docente extends user {
     }
 
     // Getters
-    public String getCodigoDocente(){return codigoDocente;}
     public String getEspecialidad(){return especialidad;}
     public ArrayList<materia> getMaterias() { return materias; }
 
     // Setters
-    public void setCodigoDocente(String codigoDocente) { this.codigoDocente = codigoDocente; }
     public void setEspecialidad(String especialidad)   { this.especialidad  = especialidad; }
 
     @Override

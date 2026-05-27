@@ -14,7 +14,7 @@ public class Estudiante extends user {
  
 
     public Estudiante(String cedula, String nombre, String apellido,
-                      String correo, String contrasena, String codigo, int semestre){
+                      String correo, String contrasena, int semestre){
 
         super(cedula, nombre, apellido, correo, contrasena);
         this.semestre = semestre;
@@ -24,7 +24,7 @@ public class Estudiante extends user {
     public Estudiante(String cedula, String nombre, String apellido,
                       String correo, String contrasena,
                       String codigoEstudiante) {
-        this(cedula, nombre, apellido, correo, contrasena, codigoEstudiante, 1);
+        this(cedula, nombre, apellido, correo, contrasena, 1);
     }
  
     // Getters
@@ -60,7 +60,7 @@ public class Estudiante extends user {
         seleccionada.agregarEstudiante(this);
         return "Matrícula exitosa en " + seleccionada.getNombre();
     }
-    
+
 
     public double promedio_materia(materia m){
         ArrayList<calificacion> notas_materia = new ArrayList<>();

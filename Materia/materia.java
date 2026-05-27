@@ -57,21 +57,6 @@ public class materia{
     estudiantes.add(estudiante);
     }
 
-    public String crear_actividad(String titulo, double porciento){
-
-        if(porciento < 0 || porciento > 100)
-            return "Porcentaje inválido";
-
-        double totalActual = 0;
-        for(actividad a : actividades)
-            totalActual += a.getPorcentaje();
-
-        if(totalActual + porciento > 100)
-            return "Porcentaje disponible: " + (100 - totalActual) + "%";
-
-        actividades.add(new actividad(titulo, porciento));
-        return "Actividad creada exitosamente";
-    }
 
 }
 

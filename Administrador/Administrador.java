@@ -37,7 +37,7 @@ public class Administrador extends user {
     public Docente crear_docente(String cedula, String nombre, String apellido, 
                                 String correo, String contrasena, String codigo, String especialidad){
 
-        Docente nuevo_docente = new Docente(cedula, nombre, apellido, correo, contrasena, codigo, especialidad);
+        Docente nuevo_docente = new Docente(cedula, nombre, apellido, correo, contrasena, especialidad);
 
         return nuevo_docente;
     }
@@ -45,7 +45,7 @@ public class Administrador extends user {
     public Estudiante crear_estudiante(String cedula, String nombre, String apellido,
                                     String correo, String contrasena, String codigo, int semestre){
 
-        Estudiante nuevo_estudiante = new Estudiante(cedula, nombre, apellido, correo, contrasena, codigo, semestre);
+        Estudiante nuevo_estudiante = new Estudiante(cedula, nombre, apellido, correo, contrasena, semestre);
 
         return nuevo_estudiante;
     }
