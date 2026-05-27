@@ -51,11 +51,7 @@ public class Estudiante extends user {
     }
 
 
-    public String matricular(int opc, ArrayList<materia> materias_disponibles){
-        if(opc < 0 || opc >= materias_disponibles.size())
-            return "Opción inválida";
-
-        materia seleccionada = materias_disponibles.get(opc);
+    public String matricular(materia seleccionada){
 
         if(materias.contains(seleccionada))
             return "Ya estás matriculado en esta materia";
@@ -64,6 +60,7 @@ public class Estudiante extends user {
         seleccionada.agregarEstudiante(this);
         return "Matrícula exitosa en " + seleccionada.getNombre();
     }
+    
 
     public double promedio_materia(materia m){
         ArrayList<calificacion> notas_materia = new ArrayList<>();
