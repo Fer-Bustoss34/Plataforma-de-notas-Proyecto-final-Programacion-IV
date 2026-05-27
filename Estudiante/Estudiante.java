@@ -2,6 +2,7 @@ package Estudiante;
 
 import java.util.Scanner;
 import User.user;
+import Materia.calificacion;
 import Materia.materia;
 
 import java.util.ArrayList;
@@ -62,5 +63,26 @@ public class Estudiante extends user {
         materias.add(seleccionada);
         seleccionada.agregarEstudiante(this);
         return "Matrícula exitosa en " + seleccionada.getNombre();
+    }
+
+    public double promedio_materia(materia m){
+        ArrayList<calificacion> notas_materia = new ArrayList<>();
+
+        for(calificacion n : m.getCalificaciones()){
+            if(n.getEstudiante().getCedula().equals(getCedula())){
+                notas_materia.add(n);
+            }
+        } 
+
+        if(notas_materia.size() == 0)
+        return 0;
+
+        double promedio = 0;
+        
+        for(calificacion n : notas_materia){
+            promedio += n.getValor();
+        }
+
+        return promedio / notas_materia.size();
     }
 }

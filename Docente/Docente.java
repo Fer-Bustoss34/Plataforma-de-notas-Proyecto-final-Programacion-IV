@@ -54,14 +54,14 @@ public class Docente extends user {
     }
 
     public String calificar_estudiante(int opcEstudiante, int opcActividad, double valor, materia m){
-        if(opcEstudiante < 0 || opcEstudiante >= m.getEstudiantes().size())
-            return "Opción de estudiante inválida";
+        if(opcEstudiante < 0 || opcEstudiante >= m.getEstudiantes().size()){
+            return "Opción de estudiante inválida";}
 
-        if(opcActividad < 0 || opcActividad >= m.getActividades().size())
-            return "Opción de actividad inválida";
+        if(opcActividad < 0 || opcActividad >= m.getActividades().size()){
+            return "Opción de actividad inválida";}
 
-        if(valor < 0.0 || valor > 5.0)
-            return "Nota inválida, debe estar entre 0.0 y 5.0";
+        if(valor < 0.0 || valor > 5.0){
+            return "Nota inválida, debe estar entre 0.0 y 5.0";}
 
         Estudiante estudianteSeleccionado = m.getEstudiantes().get(opcEstudiante);
         actividad  actividadSeleccionada  = m.getActividades().get(opcActividad);

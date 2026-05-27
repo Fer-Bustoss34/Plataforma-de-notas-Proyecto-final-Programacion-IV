@@ -57,31 +57,22 @@ public class materia{
     estudiantes.add(estudiante);
     }
 
-    public void crear_actividad(Scanner sc){
-        System.out.println("Ingrese el titulo de la actividad: ");
-        String titulo = sc.nextLine();
-        System.out.println("Ingrese el porcentaje que va a tener en la materia (entre 0 y 100): ");
-        double porciento = sc.nextDouble();
+    public String crear_actividad(String titulo, double porciento){
 
-        if(porciento < 0 || porciento > 100){
-            System.out.println("Porcentaje inválido");
-            return;
-        }
+        if(porciento < 0 || porciento > 100)
+            return "Porcentaje inválido";
 
         double totalActual = 0;
-        for(actividad a : actividades){
+        for(actividad a : actividades)
             totalActual += a.getPorcentaje();
-        }
 
-        if(totalActual + porciento > 100){
-            System.out.println("No puedes agregar esta actividad, el total superaría el 100%");
-            System.out.println("Porcentaje disponible: " + (100 - totalActual) + "%");
-            return;
-        }
+        if(totalActual + porciento > 100)
+            return "Porcentaje disponible: " + (100 - totalActual) + "%";
 
-        actividad nueva_actividad = new actividad(titulo, porciento);
-        actividades.add(nueva_actividad);
-        System.out.println("Actividad creada exitosamente");
+        actividades.add(new actividad(titulo, porciento));
+        return "Actividad creada exitosamente";
     }
 
 }
+
+
