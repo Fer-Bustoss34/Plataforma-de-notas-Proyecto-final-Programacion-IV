@@ -12,25 +12,21 @@ import User.user;
 public class Docente extends user {
 
 
-    private String codigoDocente;
     private String especialidad;
     private ArrayList<materia> materias;
 
 
     public Docente(String cedula, String nombre, String apellido,
-                   String correo, String contrasena,
-                   String codigoDocente, String especialidad){
+                   String correo, String contrasena, String especialidad){
 
         super(cedula, nombre, apellido, correo, contrasena);
-        this.codigoDocente = codigoDocente;
         this.especialidad = especialidad;
         this.materias = new ArrayList<>();
     }
 
     public Docente(String cedula, String nombre, String apellido,
-                   String correo, String contrasena,
-                   String codigoDocente) {
-        this(cedula, nombre, apellido, correo, contrasena, codigoDocente, "");
+                   String correo, String contrasena) {
+        this(cedula, nombre, apellido, correo, contrasena, "");
     }
 
     // Getters
