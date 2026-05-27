@@ -63,4 +63,23 @@ public class Docente extends user {
 
         return "Calificación registrada exitosamente";
     }
+
+    public String crear_actividad(String titulo, double porciento, materia m){
+
+        if(!m.getDocente().getCedula().equals(getCedula())){
+            return "No puedes modificar una materia que no es tuya";}
+
+        if(porciento < 0 || porciento > 100)
+            return "Porcentaje inválido";
+
+        double totalActual = 0;
+        for(actividad a : m.getActividades())
+            totalActual += a.getPorcentaje();
+
+        if(totalActual + porciento > 100)
+            return "Porcentaje disponible: " + (100 - totalActual) + "%";
+
+        m.getActividades().add(new actividad(titulo, porciento));
+        return "Actividad creada exitosamente";
+    }
 }
