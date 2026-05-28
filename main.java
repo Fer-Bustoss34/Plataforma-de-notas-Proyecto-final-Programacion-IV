@@ -62,7 +62,7 @@ public class main extends Application {
         sistema.registrarCalificacion(mat2, est1, mat2.getActividades().get(0), 5.0);
 
         // ── Cargar pantalla de login ──────────────────────────────────────────
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
         Parent root = loader.load();
 
         LoginController ctrl = loader.getController();

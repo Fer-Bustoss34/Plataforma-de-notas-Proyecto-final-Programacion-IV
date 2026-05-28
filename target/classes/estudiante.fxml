@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane prefHeight="650.0" prefWidth="950.0"
+            style="-fx-background-color: #1a1a2e;"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gui.EstudianteController">
+
+    <VBox spacing="15" AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="20"
+          AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+
+        <Label fx:id="labelBienvenida"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #e94560;"/>
+
+        <Button text="Cerrar Sesión" onAction="#onCerrarSesion"
+        style="-fx-background-color: transparent; -fx-text-fill: #e94560;
+               -fx-border-color: #e94560; -fx-border-radius: 5;
+               -fx-background-radius: 5; -fx-padding: 5 15; -fx-cursor: hand;"/>
+
+        <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-background-color:#16213e;">
+
+            <!-- ── TAB MIS MATERIAS ── -->
+            <Tab text="Mis Materias">
+                <VBox spacing="10" style="-fx-background-color:#16213e; -fx-padding:15;">
+                    <TableView fx:id="tablaMisMaterias" prefHeight="250">
+                        <columns>
+                            <TableColumn fx:id="colMatCodigo"  text="Código"       prefWidth="100"/>
+                            <TableColumn fx:id="colMatNombre"  text="Materia"      prefWidth="200"/>
+                            <TableColumn fx:id="colMatDocente" text="Docente"      prefWidth="200"/>
+                            <TableColumn fx:id="colMatNota"    text="Nota Final"   prefWidth="100"/>
+                        </columns>
+                    </TableView>
+
+                    <Label text="Matricular nueva materia"
+                           style="-fx-text-fill:#aaaaaa; -fx-font-size:13px;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="comboMateriasDisponibles" promptText="Selecciona una materia"
+                                  prefWidth="350"
+                                  style="-fx-background-color:#0f3460;-fx-text-fill:white;"/>
+                        <Button text="Matricular" onAction="#onMatricular"
+                                style="-fx-background-color:#e94560;-fx-text-fill:white;-fx-padding:8 20;-fx-background-radius:5;"/>
+                        <Label fx:id="labelMatriculaMsg" text="" style="-fx-text-fill:#00ff88;"/>
+                    </HBox>
+                </VBox>
+            </Tab>
+
+            <!-- ── TAB MIS CALIFICACIONES ── -->
+            <Tab text="Mis Calificaciones">
+                <VBox spacing="10" style="-fx-background-color:#16213e; -fx-padding:15;">
+                    <TableView fx:id="tablaCalificaciones" prefHeight="300">
+                        <columns>
+                            <TableColumn fx:id="colCalMateria"    text="Materia"    prefWidth="180"/>
+                            <TableColumn fx:id="colCalActividad"  text="Actividad"  prefWidth="160"/>
+                            <TableColumn fx:id="colCalPorcentaje" text="Porcentaje" prefWidth="100"/>
+                            <TableColumn fx:id="colCalNota"       text="Nota"       prefWidth="80"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </VBox>
+</AnchorPane>

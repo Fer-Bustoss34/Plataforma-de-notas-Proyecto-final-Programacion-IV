@@ -45,9 +45,9 @@ public class LoginController {
         try {
             String fxml;
             switch (usuario.getRol()) {
-                case "Administrador" -> fxml = "/resources/admin.fxml";
-                case "Docente"       -> fxml = "/resources/docente.fxml";
-                case "Estudiante"    -> fxml = "/resources/estudiante.fxml";
+                case "Administrador" -> fxml = "/admin.fxml";
+                case "Docente"       -> fxml = "/docente.fxml";
+                case "Estudiante"    -> fxml = "/estudiante.fxml";
                 default -> { mensajeError.setText("Rol desconocido."); return; }
             }
 
