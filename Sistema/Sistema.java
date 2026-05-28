@@ -4,8 +4,10 @@ import Administrador.Administrador;
 import Docente.Docente;
 import Estudiante.Estudiante;
 import Materia.actividad;
+import Materia.calificacion;
 import Materia.materia;
 import User.user;
+import DB.Repositorio;
 import java.util.ArrayList;
 
 public class Sistema {
@@ -14,6 +16,7 @@ public class Sistema {
     private ArrayList<Docente>       docentes;
     private ArrayList<Estudiante>    estudiantes;
     private ArrayList<materia>       materias;
+    private Repositorio              repo;
 
     // ── Constructor ──────────────────────────────────────────────────────────
 
@@ -22,6 +25,7 @@ public class Sistema {
         this.docentes        = new ArrayList<>();
         this.estudiantes     = new ArrayList<>();
         this.materias        = new ArrayList<>();
+        this.repo            = new Repositorio();
     }
 
     // ── Autenticación ────────────────────────────────────────────────────────
@@ -49,6 +53,7 @@ public class Sistema {
         if (cedulaExiste(nuevo.getCedula())) return false;
 
         docentes.add(nuevo);
+        repo.guardarDocente(nuevo);
         return true;
     }
 
@@ -57,6 +62,7 @@ public class Sistema {
         if (cedulaExiste(nuevo.getCedula())) return false;
 
         estudiantes.add(nuevo);
+        repo.guardarEstudiante(nuevo);
         return true;
     }
 
@@ -65,16 +71,22 @@ public class Sistema {
         if (correoExiste(correo)) return false;
         if (cedulaExiste(cedula)) return false;
 
-        administradores.add(new Administrador(cedula, nombre, apellido, correo, contrasena));
+        Administrador nuevo = new Administrador(cedula, nombre, apellido, correo, contrasena);
+        administradores.add(nuevo);
+        repo.guardarAdministrador(nuevo);
         return true;
     }
 
     public boolean eliminarEstudiante(String cedula) {
-        return estudiantes.removeIf(e -> e.getCedula().equals(cedula));
+        boolean eliminado = estudiantes.removeIf(e -> e.getCedula().equals(cedula));
+        if (eliminado) repo.eliminarUsuario(cedula);
+        return eliminado;
     }
 
     public boolean eliminarDocente(String cedula) {
-        return docentes.removeIf(d -> d.getCedula().equals(cedula));
+        boolean eliminado = docentes.removeIf(d -> d.getCedula().equals(cedula));
+        if (eliminado) repo.eliminarUsuario(cedula);
+        return eliminado;
     }
 
     // ── Gestión de materias ──────────────────────────────────────────────────
@@ -84,6 +96,7 @@ public class Sistema {
 
         materias.add(nueva);
         nueva.getDocente().getMaterias().add(nueva);
+        repo.guardarMateria(nueva);
         return true;
     }
 
@@ -93,6 +106,7 @@ public class Sistema {
 
         objetivo.getDocente().getMaterias().remove(objetivo);
         materias.remove(objetivo);
+        repo.eliminarMateria(codigo);
         return true;
     }
 
@@ -113,7 +127,10 @@ public class Sistema {
         if (!estudiantes.contains(e)) return "Estudiante no registrado en el sistema";
         if (!materias.contains(m))    return "Materia no registrada en el sistema";
 
-        return e.matricular(m);
+        String resultado = e.matricular(m);
+        if (resultado.startsWith("Matrícula exitosa"))
+            repo.guardarMatricula(e.getCedula(), m.getCodigoMateria());
+        return resultado;
     }
 
     // ── Calificaciones ───────────────────────────────────────────────────────
@@ -123,23 +140,30 @@ public class Sistema {
         if (!m.getEstudiantes().contains(e)) return false;
         if (valor < 0.0 || valor > 5.0)      return false;
 
-        // Si ya existe una calificación para este estudiante y actividad, actualiza el valor
         for (var c : m.getCalificaciones()) {
-            if (c.getEstudiante().getCedula().equals(e.getCedula())
-                    && c.getActividad() == a) {
+            if (c.getEstudiante().getCedula().equals(e.getCedula()) && c.getActividad() == a) {
                 c.setValor(valor);
+                repo.guardarCalificacion(c, m.getCodigoMateria());
                 return true;
             }
         }
 
-        m.getCalificaciones().add(new Materia.calificacion(e, a, valor));
+        calificacion nueva = new calificacion(e, a, valor);
+        m.getCalificaciones().add(nueva);
+        repo.guardarCalificacion(nueva, m.getCodigoMateria());
         return true;
     }
 
     public String crearActividad(Docente doc, String titulo, double porciento, materia m) {
         if (!materias.contains(m)) return "Materia no registrada en el sistema";
 
-        return doc.crear_actividad(titulo, porciento, m);
+        String resultado = doc.crear_actividad(titulo, porciento, m);
+        if (resultado.equals("Actividad creada exitosamente")) {
+            // La actividad recién agregada es la última de la lista
+            actividad nueva = m.getActividades().get(m.getActividades().size() - 1);
+            repo.guardarActividad(nueva, m.getCodigoMateria());
+        }
+        return resultado;
     }
 
     public double calcularNotaFinal(materia m, Estudiante e) {
@@ -175,12 +199,13 @@ public class Sistema {
         return null;
     }
 
-    // ── Getters de listas ────────────────────────────────────────────────────
+    // ── Getters ──────────────────────────────────────────────────────────────
 
     public ArrayList<Administrador> getAdministradores() { return administradores; }
     public ArrayList<Docente>       getDocentes()        { return docentes; }
     public ArrayList<Estudiante>    getEstudiantes()     { return estudiantes; }
     public ArrayList<materia>       getMaterias()        { return materias; }
+    public Repositorio              getRepo()            { return repo; }
 
     // ── Utilidades privadas ──────────────────────────────────────────────────
 

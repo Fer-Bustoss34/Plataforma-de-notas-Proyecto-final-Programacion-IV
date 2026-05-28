@@ -226,7 +226,7 @@ public class DocenteController implements ControladorBase {
     @FXML
     private void onCerrarSesion(ActionEvent e) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
             Parent root = loader.load();
             LoginController ctrl = loader.getController();
             ctrl.setSistema(sistema);
