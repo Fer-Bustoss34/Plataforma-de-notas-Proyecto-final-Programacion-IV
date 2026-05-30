@@ -96,7 +96,7 @@ public class EstudianteController implements ControladorBase {
             if (!estudiante.getMaterias().contains(m)) {
                 if (contador == idx) {
                     // Usa el método matricular() de Estudiante
-                    String resultado = estudiante.matricular(m);
+                    String resultado = sistema.matricularEstudiante(estudiante, m);
                     if (resultado.startsWith("Matrícula exitosa")) {
                         labelMatriculaMsg.setStyle("-fx-text-fill: #00ff88;");
                         cargarDatos();

@@ -113,7 +113,7 @@ public class DocenteController implements ControladorBase {
             double por = Double.parseDouble(campoActPorcentaje.getText().trim());
 
             // Usa el método de Docente
-            String resultado = docente.crear_actividad(nom, por, m);
+            String resultado = sistema.crearActividad(docente, nom, por, m);
 
             if (resultado.equals("Actividad creada exitosamente")) {
                 labelActMsg.setStyle("-fx-text-fill: #00ff88;");
